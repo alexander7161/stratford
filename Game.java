@@ -65,7 +65,7 @@ public class Game
         
         
 
-        currentRoom = angelLane;  // start game angelLane
+        currentRoom = angelLane;  // start game at angelLane
     }
 
     /**
