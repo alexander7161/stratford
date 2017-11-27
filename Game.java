@@ -47,21 +47,26 @@ public class Game
         // initialise room exits
         angelLane.setExit("south", theatreSquare);
         angelLane.setExit("west", stratfordStation);
+        angelLane.addObject("Bed");
         
         theatreSquare.setExit("north", angelLane);
         theatreSquare.setExit("east", morrisons);
         theatreSquare.setExit("west", stratfordCentre);
+        theatreSquare.addObject("Costume");
         
         stratfordCentre.setExit("east", theatreSquare);
         stratfordCentre.setExit("south", lidl);
         stratfordCentre.setExit("north", stratfordStation);
         
+        
         stratfordStation.setExit("south", stratfordCentre);
         stratfordStation.setExit("east", angelLane);
         
         morrisons.setExit("west", theatreSquare);
+        morrisons.addObject("Food");
         
         lidl.setExit("north", stratfordCentre);
+        lidl.addObject("Food");
         
         
 
