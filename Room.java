@@ -93,6 +93,16 @@ public class Room
         }
         return returnString;
     }
+   
+    private String getActorString()
+    {
+        String returnString = "Objects:";
+        for(String object : objects) {
+            returnString += " " + object;
+        }
+        return returnString;
+        
+    }
 
     /**
      * Return the room that is reached if we go from this room in direction

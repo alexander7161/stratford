@@ -1,3 +1,6 @@
+import java.util.ArrayList;
+
+
 /**
  *  This class is the main class of the "World of Zuul" application. 
  *  "World of Zuul" is a very simple, text based adventure game.  Users 
@@ -19,6 +22,9 @@ public class Game
 {
     private Parser parser;
     private Room currentRoom;
+    private Room angelLane, theatreSquare, morrisons, stratfordCentre, lidl, stratfordStation;
+   
+    
         
     /**
      * Create the game and initialise its internal map.
@@ -26,16 +32,17 @@ public class Game
     public Game() 
     {
         createRooms();
+        createActors();
         parser = new Parser();
     }
-
+    
+    
+    
     /**
      * Create all the rooms and link their exits together.
      */
-    private void createRooms()
+    public void createRooms()
     {
-        Room angelLane, theatreSquare, morrisons, stratfordCentre, lidl, stratfordStation;;
-      
         // create the rooms
         angelLane = new Room("in Your KCL accomodation, Angel Lane.");
         theatreSquare = new Room("in the cultural centre of Stratford, Theatre Square.");
@@ -72,6 +79,18 @@ public class Game
 
         currentRoom = angelLane;  // start game at angelLane
     }
+    
+    public void createActors() {
+        Actor stationGuard, friend, shopClerk;
+        
+        stationGuard = new Actor("Station Guard");
+        
+        friend = new Actor("Your Friend");
+        
+        shopClerk = new Actor("Shop Clerk");
+        
+    }
+    
 
     /**
      *  Main play routine.  Loops until end of play.
