@@ -32,7 +32,6 @@ public class Game
     public Game() 
     {
         createRooms();
-        createActors();
         parser = new Parser();
     }
     
@@ -80,16 +79,6 @@ public class Game
         currentRoom = angelLane;  // start game at angelLane
     }
     
-    public void createActors() {
-        Actor stationGuard, friend, shopClerk;
-        
-        stationGuard = new Actor("Station Guard");
-        
-        friend = new Actor("Your Friend");
-        
-        shopClerk = new Actor("Shop Clerk");
-        
-    }
     
 
     /**

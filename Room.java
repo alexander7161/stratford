@@ -34,7 +34,7 @@ public class Room
         exits = new HashMap<>();
         objects = new ArrayList<>();
     }
-
+    
     /**
      * Define an exit from this room.
      * @param direction The direction of the exit.
