@@ -20,7 +20,7 @@ public class Room
 {
     private String description;
     private HashMap<String, Room> exits;        // stores exits of this room.
-    private ArrayList<String> objects;
+    private ArrayList<Object> objectList;
     
     /**
      * Create a room described "description". Initially, it has
@@ -32,7 +32,7 @@ public class Room
     {
         this.description = description;
         exits = new HashMap<>();
-        objects = new ArrayList<>();
+        objectList = new ArrayList<>();
     }
     
     /**
@@ -45,9 +45,27 @@ public class Room
         exits.put(direction, neighbor);
     }
     
-    public void addObject(String object) 
+    public void addObject(int objecti) 
     {
-        objects.add(object);
+        switch (objecti) {
+            case 1:     Object bed = new Object("Bed", false, "Where you sleep", "The Bed is too heavy for me to lift");
+                        objectList.add(bed);
+                        break;
+            case 2:     Object costume = new Object("Costume", false, "Must be from a play", "You're already dressed");
+                        objectList.add(costume);
+                        break;
+            case 3:     Object sandwich = new Object("Sandwich", true, "This will get you through the lecture", "");
+                        objectList.add(sandwich);
+                        break;
+            case 4:     Object oyster = new Object("Oyster", true, "This will let you get to your lecture", "");
+                        objectList.add(oyster);
+                        break;            
+            case 5:     Object salad = new Object("Salad", false, "Expensive food you can't afford", "You can't afford that, try lidl");
+                        objectList.add(salad);
+                        break;
+        }
+        
+        
     }
 
     /**
@@ -67,9 +85,8 @@ public class Room
      */
     public String getLongDescription()
     {
-        return "You are " + description + ".\n" + getExitString() + "\n" + getObjectString();
+        return "You are " + description + ".\n" + getExitString() + "\n" + getObjectString() + Game.getPlayer().getObjectCarryString;
     }
-
     /**
      * Return a string describing the room's exits, for example
      * "Exits: north west".
@@ -87,22 +104,13 @@ public class Room
     
     private String getObjectString()
     {
-        String returnString = "Objects:";
-        for(String object : objects) {
-            returnString += " " + object;
+        String returnString = "Objects nearby:";
+        for(Object object : objectList) {
+            returnString += " " + object.getName();
         }
         return returnString;
     }
    
-    private String getActorString()
-    {
-        String returnString = "Objects:";
-        for(String object : objects) {
-            returnString += " " + object;
-        }
-        return returnString;
-        
-    }
 
     /**
      * Return the room that is reached if we go from this room in direction
@@ -115,9 +123,57 @@ public class Room
         return exits.get(direction);
     }
     
-    public ArrayList getObjects() 
+    public String pickupObjects(String obj) 
     {
-        return objects;
+        String objectEqual = null;
+        for (Object object : objectList) {
+            if (object.getName().equalsIgnoreCase(obj)) {
+                objectEqual = object.getName();
+            }
+        }
+        objectList.remove(objectEqual);
+        return objectEqual;
+    }
+    public Boolean isPickupable(String obj) {
+        Boolean pickable = null;
+        for (Object object : objectList) {
+            if(object.getName().equalsIgnoreCase(obj)) {
+                pickable = object.getPickupable();
+            }
+        }
+        return pickable;
+    }
+    public String getObjectName(String obj) {
+        String objName = null;
+        for (Object object : objectList) {
+            if(object.getName().equalsIgnoreCase(obj)) {
+                objName = object.getName();
+            }
+        }
+        return objName;
+    }
+    
+    public Object getObject(String objString) {
+        Object obj = null;
+        for (Object object : objectList) {
+                if(object.getName().equalsIgnoreCase(objString)) {
+                    obj = object;
+                }
+
+        }
+        return obj;
+
+    }
+    
+    public void removeObject(String objString) {
+        Object obj = null;
+        for (Object object : objectList) {
+                if(object.getName().equalsIgnoreCase(objString)) {
+                    obj = object;
+                }
+
+        }
+        objectList.remove(obj);
     }
 }
 

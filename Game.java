@@ -23,8 +23,7 @@ public class Game
     private Parser parser;
     private Room currentRoom;
     private Room angelLane, theatreSquare, morrisons, stratfordCentre, lidl, stratfordStation;
-   
-    
+    public Actor player;
         
     /**
      * Create the game and initialise its internal map.
@@ -33,6 +32,10 @@ public class Game
     {
         createRooms();
         parser = new Parser();
+        player = new Actor();
+    }
+    public Actor getPlayer() {
+        return player;
     }
     
     
@@ -53,26 +56,27 @@ public class Game
         // initialise room exits
         angelLane.setExit("south", theatreSquare);
         angelLane.setExit("west", stratfordStation);
-        angelLane.addObject("Bed");
+        angelLane.addObject(1);
         
         theatreSquare.setExit("north", angelLane);
         theatreSquare.setExit("east", morrisons);
         theatreSquare.setExit("west", stratfordCentre);
-        theatreSquare.addObject("Costume");
+        theatreSquare.addObject(2);
         
         stratfordCentre.setExit("east", theatreSquare);
         stratfordCentre.setExit("south", lidl);
         stratfordCentre.setExit("north", stratfordStation);
-        
+        stratfordCentre.addObject(4);
+        //Eventually add to Actor
         
         stratfordStation.setExit("south", stratfordCentre);
         stratfordStation.setExit("east", angelLane);
         
         morrisons.setExit("west", theatreSquare);
-        morrisons.addObject("Food");
+        morrisons.addObject(5);
         
         lidl.setExit("north", stratfordCentre);
-        lidl.addObject("Food");
+        lidl.addObject(3);
         
         
 
@@ -133,6 +137,9 @@ public class Game
         else if (commandWord.equals("go")) {
             goRoom(command);
         }
+        else if(commandWord.equals("pickup")) {
+            pickupObject(command);
+        }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
         }
@@ -181,6 +188,33 @@ public class Game
             System.out.println(currentRoom.getLongDescription());
         }
     }
+    
+        private void pickupObject(Command command) 
+    {
+        if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know where to go...
+            System.out.println("Pickup what?");
+            return;
+        }
+
+        String objectToPickup = command.getSecondWord();
+
+        // Try to leave current room.
+        String newObject = currentRoom.getObjectName(objectToPickup);
+        if (newObject == null) {
+            System.out.println("There is no object!");
+        }
+        else if (currentRoom.isPickupable(newObject)) {
+            player.addObject(currentRoom.getObject(objectToPickup));
+            currentRoom.removeObject(objectToPickup);
+            System.out.println(currentRoom.getLongDescription());
+        }
+        else {
+            System.out.println(currentRoom.getObject(objectToPickup).getPickupString());
+            System.out.println(currentRoom.getLongDescription());
+        }
+    }
+
 
     /** 
      * "Quit" was entered. Check the rest of the command to see
