@@ -21,9 +21,9 @@ import java.util.ArrayList;
 public class Game 
 {
     private Parser parser;
-    private Room currentRoom;
     private Room angelLane, theatreSquare, morrisons, stratfordCentre, lidl, stratfordStation;
-    public Actor player;
+    public Actor player, stationGuard, friend, shopClerk;
+    private ArrayList<Actor> actors;
         
     /**
      * Create the game and initialise its internal map.
@@ -31,13 +31,23 @@ public class Game
     public Game() 
     {
         createRooms();
+        createActors();
         parser = new Parser();
-        player = new Actor();
-    }
-    public Actor getPlayer() {
-        return player;
+
+
     }
     
+    public void createActors()
+    {
+        actors = new ArrayList<>();
+        player = new Actor("player", angelLane, 2);
+        stationGuard = new Actor("Station Guard", stratfordStation, 1);
+        actors.add(stationGuard);
+        friend = new Actor("Your Friend", angelLane, 3);
+        actors.add(friend);
+        shopClerk = new Actor("Actor", theatreSquare, 4);
+        actors.add(shopClerk);
+    }
     
     
     /**
@@ -66,8 +76,6 @@ public class Game
         stratfordCentre.setExit("east", theatreSquare);
         stratfordCentre.setExit("south", lidl);
         stratfordCentre.setExit("north", stratfordStation);
-        stratfordCentre.addObject(4);
-        //Eventually add to Actor
         
         stratfordStation.setExit("south", stratfordCentre);
         stratfordStation.setExit("east", angelLane);
@@ -77,10 +85,6 @@ public class Game
         
         lidl.setExit("north", stratfordCentre);
         lidl.addObject(3);
-        
-        
-
-        currentRoom = angelLane;  // start game at angelLane
     }
     
     
@@ -99,6 +103,12 @@ public class Game
         while (! finished) {
             Command command = parser.getCommand();
             finished = processCommand(command);
+            for (Actor a : actors) {
+                   if(metPlayer(a)) {
+                       a.greet();
+                       a.hasMet();
+                   }
+            }
         }
         System.out.println("Thank you for playing.  Good bye.");
     }
@@ -113,7 +123,7 @@ public class Game
         System.out.println("World of Zuul is a new, incredibly boring adventure game.");
         System.out.println("Type 'help' if you need help.");
         System.out.println();
-        System.out.println(currentRoom.getLongDescription());
+        printDescription();
     }
 
     /**
@@ -139,6 +149,9 @@ public class Game
         }
         else if(commandWord.equals("pickup")) {
             pickupObject(command);
+        }
+        else if(commandWord.equals("take")) {
+            takeObject(command);
         }
         else if (commandWord.equals("quit")) {
             wantToQuit = quit(command);
@@ -178,18 +191,18 @@ public class Game
         String direction = command.getSecondWord();
 
         // Try to leave current room.
-        Room nextRoom = currentRoom.getExit(direction);
+        Room nextRoom = player.getCurrentRoom().getExit(direction);
 
         if (nextRoom == null) {
             System.out.println("There is no door!");
         }
         else {
-            currentRoom = nextRoom;
-            System.out.println(currentRoom.getLongDescription());
+            player.setCurrentRoom(nextRoom);
+            printDescription();
         }
     }
     
-        private void pickupObject(Command command) 
+    private void pickupObject(Command command) 
     {
         if(!command.hasSecondWord()) {
             // if there is no second word, we don't know where to go...
@@ -197,21 +210,18 @@ public class Game
             return;
         }
 
-        String objectToPickup = command.getSecondWord();
-
-        // Try to leave current room.
-        String newObject = currentRoom.getObjectName(objectToPickup);
-        if (newObject == null) {
+        Object objectToPickup = player.getCurrentRoom().getObject(command.getSecondWord());
+        
+        if (objectToPickup == null) {
             System.out.println("There is no object!");
         }
-        else if (currentRoom.isPickupable(newObject)) {
-            player.addObject(currentRoom.getObject(objectToPickup));
-            currentRoom.removeObject(objectToPickup);
-            System.out.println(currentRoom.getLongDescription());
+        else if (objectToPickup.getPickupable()) {
+            player.addObject(objectToPickup);
+            player.getCurrentRoom().removeObject(objectToPickup);
+            printDescription();
         }
         else {
-            System.out.println(currentRoom.getObject(objectToPickup).getPickupString());
-            System.out.println(currentRoom.getLongDescription());
+            System.out.println(objectToPickup.getPickupString());
         }
     }
 
@@ -230,5 +240,40 @@ public class Game
         else {
             return true;  // signal that we want to quit
         }
+    }
+    private void printDescription()
+    {
+        System.out.println(player.getCurrentRoom().getLongDescription());
+        if(player.getObjectCarryString("Currently carrying:") != null) {System.out.println(player.getObjectCarryString("Currently carrying:"));}
+        if(getActorString() != null) {System.out.println(getActorString());}
+    }
+    
+    private String getActorString()
+    {
+        Boolean actorPresent = false;
+        String returnString = "People Nearby:";
+        for (Actor a : actors) {
+            if(metPlayer(a)) {
+                returnString += " " + a.getName();
+                actorPresent = true;
+            }
+            
+        }
+        if(actorPresent == false) {returnString=null;}
+        return returnString;
+    }
+    
+    public Boolean metPlayer(Actor a)
+    {
+        Boolean met = false;
+        if(player.getCurrentRoom() == a.getCurrentRoom()) {
+            met = true;
+        }
+        return met;
+    }
+    
+    private void takeObject(Command command)
+    {
+        
     }
 }
