@@ -16,6 +16,9 @@ public class Actor
     private String firstGreeting;
     private ArrayList<String> greetings;
     private Boolean met;
+    private Boolean acceptingItem;
+    private Boolean givingItem;
+    private Boolean interactionComplete;
 
     /**
      * Constructor for objects of class Actor
@@ -29,8 +32,11 @@ public class Actor
         objectList = new ArrayList<>();
         greetings = new ArrayList<>();
         met = false;
+        givingItem = false;
+        acceptingItem = false;
         
         firstGreeting = "";
+        interactionComplete = false;
         
         setGreeting(i);
     }
@@ -43,6 +49,7 @@ public class Actor
                         greetings.add("I thought I told you, you need an Oyster!");
                         greetings.add("I thought I told you, you need an Oyster!");
                         greetings.add("I thought I told you, you need an Oyster!");
+                        acceptingItem = true;
                         break;
             case 2:     
                         break;
@@ -55,13 +62,14 @@ public class Actor
                         carrying = true;
                         Object oyster = new Object("Oyster", true, "This will let you get to your lecture", "");
                         objectList.add(oyster);
+                        givingItem = true;
                         break;
-            case 4:     firstGreeting = "I just got my dream role in the new play.";
-                        greetings.add("I thought I told you, you need an Oyster!");
-                        greetings.add("You need an OysterCard? Take mine.");
-                        greetings.add("You need an OysterCard? Take mine.");
-                        greetings.add("You need an OysterCard? Take mine.");
-                        greetings.add("You need an OysterCard? Take mine.");
+            case 4:     firstGreeting = "Hey, I got the perfect role.";
+                        greetings.add("");
+                        greetings.add("");
+                        greetings.add("");
+                        greetings.add("");
+                        greetings.add("");
                         break;            
         }
     }
@@ -76,6 +84,27 @@ public class Actor
     {
         objectList.add(obj);
         carrying = true;
+    }
+    public void removeObject(Object obj)
+    {
+        objectList.remove(obj);
+        carrying=false;
+    }
+    public Object getObject()
+    {
+        Object result = null;
+        result = objectList.get(0);
+        return result;
+    }
+    public Boolean isCarrying(String obj)
+    {
+        Boolean result = false;
+        for(Object object : objectList) {
+            if(object.getName().equalsIgnoreCase(obj)) {
+                result = true;
+            }
+        }
+        return result;
     }
     
     public String getObjectCarryString(String title)
@@ -112,12 +141,31 @@ public class Actor
         }
         else {
             int min = 0;
-            int max = 5;
+            int max = 4;
             int random = ThreadLocalRandom.current().nextInt(min, max + 1);
             System.out.println(getName() + ": " + greetings.get(random));
             if(carrying) {
                 System.out.println(getObjectCarryString("Currently carrying:"));
             }
         }
+    }
+    public Boolean getAccepting()
+    {
+        return acceptingItem;
+    }
+    public Boolean getGivingItem()
+    {
+        return givingItem;
+    }
+    public Boolean getInteractionComplete()
+    {
+        Boolean complete = false;
+        if(acceptingItem) {
+            
+        }
+        if(givingItem) {
+            
+        }
+        return complete;
     }
 }

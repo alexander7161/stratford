@@ -1,4 +1,6 @@
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Set;
 
 
 /**
@@ -22,8 +24,9 @@ public class Game
 {
     private Parser parser;
     private Room angelLane, theatreSquare, morrisons, stratfordCentre, lidl, stratfordStation;
-    public Actor player, stationGuard, friend, shopClerk;
-    private ArrayList<Actor> actors;
+    public Actor player, stationGuard, friend, actor;
+    private HashMap<Room, Actor> actors;
+    private ArrayList<Actor> actorsSet;
         
     /**
      * Create the game and initialise its internal map.
@@ -33,20 +36,25 @@ public class Game
         createRooms();
         createActors();
         parser = new Parser();
+        actorsSet = new ArrayList<>();
+        Set<Room> actorRooms = actors.keySet();
+        for(Room room : actorRooms) {
+            actorsSet.add(actors.get(room));
+        }
 
 
     }
     
     public void createActors()
     {
-        actors = new ArrayList<>();
+        actors = new HashMap<>();
         player = new Actor("player", angelLane, 2);
         stationGuard = new Actor("Station Guard", stratfordStation, 1);
-        actors.add(stationGuard);
+        actors.put(stratfordStation, stationGuard);
         friend = new Actor("Your Friend", angelLane, 3);
-        actors.add(friend);
-        shopClerk = new Actor("Actor", theatreSquare, 4);
-        actors.add(shopClerk);
+        actors.put(angelLane, friend);
+        actor = new Actor("Actor", theatreSquare, 4);
+        actors.put(theatreSquare, actor);
     }
     
     
@@ -103,7 +111,13 @@ public class Game
         while (! finished) {
             Command command = parser.getCommand();
             finished = processCommand(command);
-            for (Actor a : actors) {
+            if(friend.getInteractionComplete() || player.isCarrying("sandwich")){
+            stationGuard.getInteractionComplete();
+        }
+
+        
+        
+            for (Actor a : actorsSet) {
                    if(metPlayer(a)) {
                        a.greet();
                        a.hasMet();
@@ -252,7 +266,7 @@ public class Game
     {
         Boolean actorPresent = false;
         String returnString = "People Nearby:";
-        for (Actor a : actors) {
+        for (Actor a : actorsSet) {
             if(metPlayer(a)) {
                 returnString += " " + a.getName();
                 actorPresent = true;
@@ -261,6 +275,12 @@ public class Game
         }
         if(actorPresent == false) {returnString=null;}
         return returnString;
+    }
+    private Actor getActors()
+    {
+         Actor result = null;
+         result = actors.get(player.getCurrentRoom());
+         return result;
     }
     
     public Boolean metPlayer(Actor a)
@@ -274,6 +294,28 @@ public class Game
     
     private void takeObject(Command command)
     {
-        
+                if(!command.hasSecondWord()) {
+            // if there is no second word, we don't know where to go...
+            System.out.println("Take what?");
+            return;
+        }
+        if(getActors().getObject() == null) {
+            return;
+        }
+        if(!command.getSecondWord().equalsIgnoreCase(getActors().getObject().getName())) {
+            System.out.println("They don't have that item.");
+            return;
+        }
+
+        Object objectToTake = getActors().getObject();
+       
+        if (getActors().getGivingItem()) {
+            player.addObject(objectToTake);
+            getActors().removeObject(objectToTake);
+            printDescription();
+        }
+        else {
+            System.out.println(getActors().getName() + " needs that at the moment");
+        }
     }
 }
