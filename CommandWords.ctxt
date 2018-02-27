@@ -1,6 +1,6 @@
 #BlueJ class context
 comment0.target=CommandWords
-comment0.text=\r\n\ This\ class\ is\ part\ of\ the\ "World\ of\ Zuul"\ application.\ \r\n\ "World\ of\ Zuul"\ is\ a\ very\ simple,\ text\ based\ adventure\ game.\r\n\ \r\n\ This\ class\ holds\ an\ enumeration\ of\ all\ command\ words\ known\ to\ the\ game.\r\n\ It\ is\ used\ to\ recognise\ commands\ as\ they\ are\ typed\ in.\r\n\r\n\ @author\ \ Michael\ K\u00F6lling\ and\ David\ J.\ Barnes\r\n\ @version\ 2016.02.29\r\n
+comment0.text=\r\n\ This\ class\ is\ adapted\ from\ the\ "World\ of\ Zuul"\ application.\ \r\n\ by\ Michael\ K\u00F6lling\ and\ David\ J.\ Barnes.\r\n\ \r\n\ This\ class\ holds\ an\ enumeration\ of\ all\ command\ words\ known\ to\ the\ game.\r\n\ It\ is\ used\ to\ recognise\ commands\ as\ they\ are\ typed\ in.\r\n\ \r\n\ It\ also\ provides\ helpful\ information\ for\ using\ the\ commands.\r\n\r\n\ @author\ \ Alexander\ Davis\r\n\ @version\ 8.12.2017\r\n
 comment1.params=
 comment1.target=CommandWords()
 comment1.text=\r\n\ Constructor\ -\ initialise\ the\ command\ words.\r\n
@@ -10,4 +10,7 @@ comment2.text=\r\n\ Check\ whether\ a\ given\ String\ is\ a\ valid\ command\ wor
 comment3.params=
 comment3.target=void\ showAll()
 comment3.text=\r\n\ Print\ all\ valid\ commands\ to\ System.out.\r\n
-numComments=4
+comment4.params=helpCommand
+comment4.target=java.lang.String\ getHelp(java.lang.String)
+comment4.text=\r\n\ @return\ String\ with\ help\ information\ for\ a\ specific\ command.\r\n
+numComments=5

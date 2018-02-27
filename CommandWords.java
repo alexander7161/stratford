@@ -1,20 +1,35 @@
+import java.util.HashMap;
+import java.util.Set;
+import java.util.ArrayList;
+
 /**
- * This class is part of the "World of Zuul" application. 
- * "World of Zuul" is a very simple, text based adventure game.
+ * This class is adapted from the "World of Zuul" application. 
+ * by Michael Kölling and David J. Barnes.
  * 
  * This class holds an enumeration of all command words known to the game.
  * It is used to recognise commands as they are typed in.
+ * 
+ * It also provides helpful information for using the commands.
  *
- * @author  Michael Kölling and David J. Barnes
- * @version 2016.02.29
+ * @author  Alexander Davis
+ * @version 8.12.2017
  */
 
 public class CommandWords
 {
-    // a constant array that holds all valid command words
-    private static final String[] validCommands = {
-        "go", "quit", "help"
-    };
+    // a constant HashMap that holds all valid command words and their help message.
+    private static final HashMap<String, String> validCommands = new HashMap<String, String>()
+    {{
+        put("go", "<direction> - From the available exits, choose a single direction");
+        put("quit", "- Quit the game.");
+        put("help", "- Display this help message.");
+        put("pickup", "<Object> - From the objects in your vicinity, pickup one.");
+        put("drop", "<Object> - Drop an object you are carrying.");
+        put("back", "- Return to the last room.");
+        put("take", "<object> <Person> - take an object from a person in your vicinity.");
+        put("give", "<object> <person> - give an object to a person in your vicinity."); 
+    }};
+
 
     /**
      * Constructor - initialise the command words.
@@ -30,8 +45,10 @@ public class CommandWords
      */
     public boolean isCommand(String aString)
     {
-        for(int i = 0; i < validCommands.length; i++) {
-            if(validCommands[i].equals(aString))
+        Set<String> commandSet = validCommands.keySet();
+        String[] commands = commandSet.stream().toArray(String[]::new);
+        for(int i = 0; i < commands.length; i++) {
+            if(commands[i].equals(aString))
                 return true;
         }
         // if we get here, the string was not found in the commands
@@ -43,9 +60,25 @@ public class CommandWords
      */
     public void showAll() 
     {
-        for(String command: validCommands) {
-            System.out.print(command + "  ");
+        Set<String> commandSet = validCommands.keySet();
+        String[] commands = commandSet.stream().toArray(String[]::new); // from https://stackoverflow.com/questions/5982447/how-to-convert-setstring-to-string
+
+        for(String command : commands)
+        {
+            System.out.println(command + " " + validCommands.get(command));
         }
         System.out.println();
+    }
+    
+    /**
+     * @return String with help information for a specific command.
+     */
+    public String getHelp(String helpCommand)
+    {
+        String returnString = null;
+        if(validCommands.containsKey(helpCommand)) {
+            returnString = helpCommand + " " + validCommands.get(helpCommand);
+        }
+        return returnString;
     }
 }

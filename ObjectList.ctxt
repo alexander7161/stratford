@@ -1,0 +1,9 @@
+#BlueJ class context
+comment0.target=ObjectList
+comment0.text=\r\n\ Class\ which\ contains\ a\ method\ to\ \r\n\ create\ all\ kinds\ of\ objects\ in\ the\ game.\r\n\r\n\ @author\ Alexander\ Davis\r\n\ @version\ 8.12.2017\r\n
+comment1.params=
+comment1.target=ObjectList()
+comment2.params=objectString
+comment2.target=Object\ createObject(java.lang.String)
+comment2.text=\r\n\ Creates\ object\ from\ string\ of\ name\ of\ an\ object.\r\n
+numComments=3
